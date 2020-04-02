@@ -1,8 +1,3 @@
-/**
- * Created by liuyubobobo on 14-4-11.
- * my site: http://www.liuyubobobo.com
- */
-
 var board = new Array()
 var score = 0
 var hasConflicted = new Array()
@@ -77,3 +72,145 @@ function updateBoardView() {
     }
   }
 }
+
+function generateOneNumber() {
+  // 判断能否生成数字
+  if (nospace(board)) return false
+
+  //随机一个位置
+  var randx = parseInt(Math.floor(Math.random() * 4))
+  var randy = parseInt(Math.floor(Math.random() * 4))
+  // 循环判断这个位置是否可用
+  while (true) {
+    if (board[randx][randy] == 0) break
+
+    randx = parseInt(Math.floor(Math.random() * 4))
+    randy = parseInt(Math.floor(Math.random() * 4))
+  }
+  //随机一个数字
+  var randNumber = Math.random() < 0.5 ? 2 : 4
+
+  //在随机位置显示随机数字
+  board[randx][randy] = randNumber
+  showNumberWithAnimation(randx, randy, randNumber)
+
+  return true
+}
+
+$(document).keydown(function(event) {
+  event.preventDefault()
+  switch (event.keyCode) {
+    case 37: //left
+      if (moveLeft()) {
+        setTimeout('generateOneNumber()', 210)
+        setTimeout('isgameover()', 300)
+      }
+      break
+    case 38: //up
+      if (moveUp()) {
+        setTimeout('generateOneNumber()', 210)
+        setTimeout('isgameover()', 300)
+      }
+      break
+    case 39: //right
+      if (moveRight()) {
+        setTimeout('generateOneNumber()', 210)
+        setTimeout('isgameover()', 300)
+      }
+      break
+    case 40: //down
+      if (moveDown()) {
+        setTimeout('generateOneNumber()', 210)
+        setTimeout('isgameover()', 300)
+      }
+      break
+    default:
+      break
+  }
+})
+
+/**
+ * 对每一个数字的左侧位置进行判断，看是否可能为落脚点
+ * 落脚位置是否为空？
+ * 落脚位置数字和待判定元素数字相等？
+ * 移动路径中是否有障碍物？
+ */
+function moveLeft() {
+  // 判断是否可以向左移动
+  // 1. 左边是否没有数字
+  // 2. 左边数字是否和自己相等
+  if (!canMoveLeft(board)) return false
+  for (var i = 0; i < 4; i++) {
+    for (var j = 1; j < 4; j++) {
+      if (board[i][j] != 0) {
+        // 遍历 j 值左侧的位置
+        for (var k = 0; k < j; k++) {
+          // noBlockHorizontal 判断两个位置之间是否有障碍物
+          if (board[i][k] == 0 && noBlockHorizontal(i, k, j, board)) {
+            // move
+            showMoveAnimation(i, j, i, k)
+            board[i][k] = board[i][j]
+            board[i][j] = 0
+            continue
+          } else if (
+            board[i][k] == board[i][j] &&
+            noBlockHorizontal(i, k, j, board)
+          ) {
+            // move
+            showMoveAnimation(i, j, i, k)
+            board[i][k] += board[i][j]
+            // add
+            board[i][j] = 0
+            continue
+          }
+        }
+      }
+    }
+  }
+
+  setTimeout('updateBoardView()', 200)
+  return true
+}
+
+function moveRight() {
+  if (!canMoveRight(board)) return false
+  for (var i = 0; i < 4; i++) {
+    for (var j = 2; j > -1; j--) {
+      if (board[i][j] != 0) {
+        // 遍历 j 值左侧的位置
+        for (var k = 3; k > j; k--) {
+          // noBlockHorizontal 判断两个位置之间是否有障碍物
+          if (board[i][k] == 0 && noBlockHorizontal(i, k, j, board)) {
+            // move
+            showMoveAnimation(i, j, i, k)
+            board[i][k] = board[i][j]
+            board[i][j] = 0
+            continue
+          } else if (
+            board[i][k] == board[i][j] &&
+            noBlockHorizontal(i, k, j, board)
+          ) {
+            // move
+            showMoveAnimation(i, j, i, k)
+            board[i][k] += board[i][j]
+            // add
+            board[i][j] = 0
+            continue
+          }
+        }
+      }
+    }
+  }
+
+  setTimeout('updateBoardView()', 200)
+  return true
+}
+
+function moveUp() {
+  if (!canMoveUp(board)) return false
+
+  // setTimeout('updateBoardView()', 200)
+  return true
+}
+
+function isgameover() {}

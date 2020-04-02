@@ -1,7 +1,3 @@
-/**
- * Created by liuyubobobo on 14-4-11.
- * my site: http://www.liuyubobobo.com
- */
 function getPosTop(i, j) {
   return 20 + i * 120
 }
@@ -47,4 +43,69 @@ function getNumberColor(number) {
   if (number <= 4) return '#776e65'
 
   return 'white'
+}
+
+// 判断整个棋盘盒是否还有值
+function nospace(board) {
+  for (var i = 0; i < 4; i++) {
+    for (var j = 0; j < 4; j++) {
+      if (board[i][j] == 0) return false
+    }
+  }
+
+  return true
+}
+
+// 判断是否可以向左移动
+function canMoveLeft(board) {
+  // j 是从1 开始的，因为向左边移动，左边第一列肯定不会动
+  for (var i = 0; i < 4; i++)
+    for (var j = 1; j < 4; j++)
+      if (board[i][j] != 0) {
+        // board[i][j - 1] == 0 是没有值得
+        // board[i][j - 1] == board[i][j] 两个值相等
+        if (board[i][j - 1] == 0 || board[i][j - 1] == board[i][j]) return true
+      }
+
+  return false
+}
+
+// 判断是否可以向上移动
+function canMoveUp(board) {
+  for (var i = 1; i < 4; i++)
+    for (var j = 0; j < 4; j++) {
+      if (board[i][j] != 0)
+        if (board[i - 1][j] == 0 || board[i - 1][j] == board[i][j]) return true
+    }
+  return false
+}
+
+// 判断是否可以向右移动
+function canMoveRight(board) {
+  for (var i = 0; i < 4; i++) {
+    for (var j = 2; j > -1; j--) {
+      if (board[i][j] != 0) {
+        // board[i][j - 1] == 0 是没有值得
+        // board[i][j - 1] == board[i][j] 两个值相等
+        if (board[i][j + 1] == 0 || board[i][j + 1] == board[i][j]) return true
+      }
+    }
+  }
+  return false
+}
+
+// 判断同一行的两个位置之间是否有障碍物
+function noBlockHorizontal(row, col1, col2, board) {
+  for (var i = col1 + 1; i < col2; i++) {
+    if (board[row][i] != 0) return false
+  }
+  return true
+}
+
+// 判断同一列的两个位置之间是否有障碍物
+function noBlockVertical(col, row1, row2, board) {
+  for (var i = row1 + 1; i < row2; i++) {
+    if (board[i][col] != 0) return false
+  }
+  return true
 }
