@@ -80,6 +80,16 @@ function canMoveUp(board) {
   return false
 }
 
+// 判断是否可以向下移动
+function canMoveDown(board) {
+  for (var j = 0; j < 4; j++) {
+    for (var i = 2; i >= 0; i--)
+      if (board[i][j] != 0)
+        if (board[i + 1][j] == 0 || board[i + 1][j] == board[i][j]) return true
+  }
+  return false
+}
+
 // 判断是否可以向右移动
 function canMoveRight(board) {
   for (var i = 0; i < 4; i++) {
